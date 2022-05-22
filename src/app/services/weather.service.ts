@@ -7,7 +7,10 @@ import { BehaviorSubject, delay, map, Observable } from 'rxjs';
 })
 export class WeatherService {
   private apiKey: string = '0da871a4d5baef25083beade78885f75';
-  private URL: string = 'https://api.openweathermap.org/data/2.5/weather';
+  private weatherTodayURL: string =
+    'https://api.openweathermap.org/data/2.5/weather';
+  private oneCallURL: string =
+    'https://api.openweathermap.org/data/2.5/onecall';
   private cities: string[] = [
     'Vilnius',
     'Kaunas',
@@ -15,6 +18,8 @@ export class WeatherService {
     'Šiauliai',
     'Panevėžys',
   ];
+
+  //Communicates latitude/longitude coordinates, which are needed for map creation.
   public coordsSubject = new BehaviorSubject([1, 1]);
 
   constructor(private http: HttpClient) {}
@@ -30,7 +35,7 @@ export class WeatherService {
       .append('units', 'metric')
       .append('lang', 'lt')
       .append('appid', this.apiKey);
-    return this.http.get(this.URL, { params }).pipe(
+    return this.http.get(this.weatherTodayURL, { params }).pipe(
       map((data: any) => ({
         ...data,
         image: `http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`,
@@ -43,12 +48,23 @@ export class WeatherService {
       .append('units', 'metric')
       .append('lang', 'lt')
       .append('appid', this.apiKey);
-    return this.http.get(this.URL, { params }).pipe(
+    return this.http.get(this.weatherTodayURL, { params }).pipe(
       map((data: any) => ({
         ...data,
         image: `http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`,
       })),
       delay(500)
     );
+    //Delay added to show mat spinner.
+  }
+
+  getMultipleDayWeather(lat: number, lon: number): Observable<any> {
+    let params = new HttpParams()
+      .append('lat', lat)
+      .append('lon', lon)
+      .append('units', 'metric')
+      .append('lang', 'lt')
+      .append('appid', this.apiKey);
+    return this.http.get(this.oneCallURL, { params });
   }
 }

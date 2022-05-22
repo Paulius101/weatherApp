@@ -1,13 +1,4 @@
-import {
-  AfterViewInit,
-  Component,
-  HostListener,
-  Input,
-  OnChanges,
-  OnInit,
-  SimpleChanges,
-  ViewChild,
-} from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { WeatherService } from 'src/app/services/weather.service';
 
@@ -16,14 +7,14 @@ import { WeatherService } from 'src/app/services/weather.service';
   templateUrl: './google-map.component.html',
   styleUrls: ['./google-map.component.scss'],
 })
-export class GoogleMapComponent implements OnInit, AfterViewInit {
+export class GoogleMapComponent implements AfterViewInit {
   @ViewChild('map') mapElement: any;
-  map?: google.maps.Map;
+  public map?: google.maps.Map;
+
   constructor(private weatherService: WeatherService, private router: Router) {}
 
-  ngOnInit(): void {}
-
   ngAfterViewInit(): void {
+    //Creates a map initially.
     this.weatherService.coordsSubject.subscribe((coords) => {
       const mapProperties = {
         center: new google.maps.LatLng(coords[0], coords[1]),
@@ -34,24 +25,11 @@ export class GoogleMapComponent implements OnInit, AfterViewInit {
         this.mapElement.nativeElement,
         mapProperties
       );
-      google.maps.event.addListener(this.map!, 'click', (event) => {
-        const mapProperties = {
-          center: new google.maps.LatLng(
-            event.latLng.lat(),
-            event.latLng.lng()
-          ),
-          zoom: 13,
-          mapTypeId: google.maps.MapTypeId.ROADMAP,
-        };
-        this.map = new google.maps.Map(
-          this.mapElement.nativeElement,
-          mapProperties
-        );
-      });
     });
   }
 
   onClick() {
+    //Takes lat/lng from click event on the map and creates a new map for the location (could refactor to a hostlistiner in a separate directive)
     google.maps.event.addListener(this.map!, 'click', (event) => {
       this.weatherService.coordsSubject.next([
         event.latLng.lat(),

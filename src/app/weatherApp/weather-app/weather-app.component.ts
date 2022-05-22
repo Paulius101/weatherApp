@@ -1,5 +1,4 @@
-import { HttpClient } from '@angular/common/http';
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { WeatherService } from 'src/app/services/weather.service';
@@ -11,15 +10,13 @@ import {} from 'googlemaps';
   styleUrls: ['./weather-app.component.scss'],
 })
 export class WeatherAppComponent implements OnInit {
-  public cityControl = new FormControl('Pasirinkti miestą');
+  public cityControl = new FormControl('');
   public searchCityControl = new FormControl('');
-  public cities: string[];
+  public cities?: string[];
   public lat?: number;
   public lon?: number;
 
-  constructor(private weatherService: WeatherService, private router: Router) {
-    this.cities = [];
-  }
+  constructor(private weatherService: WeatherService, private router: Router) {}
 
   ngOnInit(): void {
     this.getLocation();
@@ -30,6 +27,7 @@ export class WeatherAppComponent implements OnInit {
   }
 
   getLocation() {
+    //If the user agrees to share their location, we use their coordinates to get the weather and navigate to weather-output component.
     if ('geolocation' in navigator) {
       navigator.geolocation.watchPosition((res) => {
         this.lat = res.coords.latitude;
@@ -42,6 +40,7 @@ export class WeatherAppComponent implements OnInit {
           });
       });
     } else {
+      //If they do not agree, get weather for default city.
       this.weatherService.getWeatherForCity('Vilnius').subscribe((value) => {
         this.weatherService.coordsSubject.next([
           value.coord.lat,

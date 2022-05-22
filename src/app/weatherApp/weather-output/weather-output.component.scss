@@ -11,46 +11,44 @@
 }
 
 mat-card {
-  width: 250px;
+  width: auto;
 }
 
 mat-card::ng-deep.mat-card-header-text {
+  text-align: center;
   width: 100%;
 }
 
-.flex-row {
-  display: flex;
-  flex-direction: row;
 
-  >div {
-    flex: 50%;
-    border-radius: 10px
-  }
+div {
+  flex: 50%;
+  border-radius: 10px
+}
 
-  >.outlook {
-    padding: 10px;
-    color: black;
-    background: rgba(0, 0, 0, 0.1);
-  }
+.outlook {
+  padding: 10px;
+  color: black;
+  background: rgba(0, 0, 0, 0.1);
+  height: 140px;
+  width: 130px;
+}
 
-  >.temp {
-    background: lightblue;
-    padding: 10px;
-    color: black;
-    margin-right: 10px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
+.temp {
+  background: lightblue;
+  text-align: center;
+  padding: 10px;
+  color: black;
+  margin-right: 10px;
+  height: 140px;
+  width: 130px;
+}
 
-  .big-text {
-    font-size: 30px;
-  }
+.big-text {
+  font-size: 30px;
+}
 
 
 
-  .image {
-    height: 80px;
-  }
+.image {
+  height: 80px;
 }

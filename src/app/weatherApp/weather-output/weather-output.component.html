@@ -1,24 +1,67 @@
 <div class="output">
-    <mat-card class="mat-elevation-z5" *ngIf="data | async as data" fxLayout="column" fxLayoutAlign="center center">
-        <mat-spinner *ngIf="loading; else result" [diameter]="75"></mat-spinner>
+    <mat-card class="mat-elevation-z5"
+              *ngIf="data | async as data"
+              fxLayout="column"
+              fxLayoutAlign="center center">
+        <mat-spinner *ngIf="loading; else result"
+                     [diameter]="75"></mat-spinner>
+        <button *ngIf="!loading"
+                mat-raised-button
+                style="margin-bottom: 20px;"
+                color="primary"
+                (click)="multipleDayRequest()">
+            {{showDailyReport ? 'Apžvelgti šios dienos orus' :
+            'Apžvelgti ateinančių 8 dienų orus'}}
+        </button>
         <ng-template #result>
-            <mat-card-header>
-                <mat-card-title>{{data.name}} oras</mat-card-title>
-                <mat-card-subtitle>Šiandien: {{todayDate | localizedDate}}</mat-card-subtitle>
-            </mat-card-header>
-            <mat-card-content>
-                <div class="flex-row">
-                    <div class="temp">
-                        <span class="big-text">{{data.main.temp | number:'0.0-0'}}°C</span>
-                        <span>Jausmas lyg</span>
-                        <span>{{data.main.feels_like | number: '0.0-0'}}°C</span>
-                    </div>
-                    <div class="outlook">
-                        <img [src]="data.image" class="image" />
-                        <span>{{data.weather[0].description | titlecase}}</span>
-                    </div>
+            <div *ngIf="!showDailyReport, else dailyReport">
+                <div fxLayout="column"
+                     fxLayoutAlign="center center">
+                    <mat-card-header>
+                        <mat-card-title>{{data.name}} oras</mat-card-title>
+                        <mat-card-subtitle>Šiandien: {{todayDate | localizedDate}}
+                        </mat-card-subtitle>
+                    </mat-card-header>
                 </div>
-            </mat-card-content>
+                <mat-card-content>
+                    <div fxLayout="row"
+                         fxLayoutAlign="center center">
+                        <div class="temp"
+                             fxLayout="column"
+                             fxLayoutAlign="center center">
+                            <span class="big-text">{{data.main.temp | number:'0.0-0'}}°C</span>
+                            <span>Jausmas lyg</span>
+                            <span>{{data.main.feels_like | number: '0.0-0'}}°C</span>
+                        </div>
+                        <div class="outlook"
+                             fxLayout="column"
+                             fxLayoutAlign="center center">
+                            <img [src]="data.image"
+                                 class="image" />
+                            <span>{{data.weather[0].description | titlecase}}</span>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </div>
+            <ng-template #dailyReport>
+                <mat-card-header>
+                    <mat-card-title>{{city}} oras ateinančias 8 dienas</mat-card-title>
+                </mat-card-header>
+                <div fxLayout="row">
+                    <mat-card-content *ngFor="day of data.daily; let day">
+                        <div fxLayout="column"
+                             fxLayoutAlign="center center"
+                             class="temp"
+                             style="height: 165px !important;">
+                            <div style="font-size: 20px;">Dieną: {{day.temp.day | number:'0.0-0'}}°C
+                            </div>
+                            <img src='{{"http://openweathermap.org/img/wn/" + day.weather[0].icon +"@2x.png"}}'
+                                 class="image" />
+                            <div>{{day.weather[0].description | titlecase}}</div>
+                        </div>
+                    </mat-card-content>
+                </div>
+            </ng-template>
         </ng-template>
     </mat-card>
 </div>
