@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, delay, map, Observable } from 'rxjs';
+import { BehaviorSubject, delay, map, Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -21,6 +21,8 @@ export class WeatherService {
 
   //Communicates latitude/longitude coordinates, which are needed for map creation.
   public coordsSubject = new BehaviorSubject([1, 1]);
+  public resetCityControl = new Subject();
+  public resetSearchCityControl = new Subject();
 
   constructor(private http: HttpClient) {}
 

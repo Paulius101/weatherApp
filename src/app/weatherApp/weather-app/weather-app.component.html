@@ -8,7 +8,8 @@
     <mat-form-field style="margin: 0px 10px;">
         <mat-label>Pasirinkite miestą</mat-label>
         <mat-select [formControl]="cityControl">
-            <mat-option *ngFor="let city of cities"
+            <mat-option (click)="onSelect()"
+                        *ngFor="let city of cities"
                         [value]="city">
                 {{city}}
             </mat-option>
