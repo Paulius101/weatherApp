@@ -21,8 +21,8 @@ export class WeatherService {
 
   //Communicates latitude/longitude coordinates, which are needed for map creation.
   public coordsSubject = new BehaviorSubject([1, 1]);
-  public resetCityControl = new Subject();
-  public resetSearchCityControl = new Subject();
+  public resetCityControl = new Subject<string>();
+  public resetSearchCityControl = new Subject<string>();
 
   constructor(private http: HttpClient) {}
 
